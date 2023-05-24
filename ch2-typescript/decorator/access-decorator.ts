@@ -20,7 +20,9 @@ class Person {
 }
 
 const person = new Person('Dexter');
-console.log(person); // TODO: ??? getName()은 안나온다.
-for (let key in person) {
+console.log(person);
+
+// TODO: ??? for in 문을 사용하면서 getName()은 안나온다.
+for (const key in person) {
     console.log(key);
 }

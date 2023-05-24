@@ -25,6 +25,7 @@ function Validate(target: any, propertyKey: string, descriptor: PropertyDescript
     const method = descriptor.value;
 
     descriptor.value = function (...args: string[]) {
+        // vaildator 실행 후 원래 함수 실행
         Object.keys(target.validators).forEach(key => {
             if (!target.validators[key](args)) {
                 throw new Error('BadRequest');
