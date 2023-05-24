@@ -10,27 +10,28 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  async createUser(@Body() dto: CreateUserDto): Promise<CreateUserDto> {
-    console.log(dto);
-    return dto;
+  async createUser(@Body() dto: CreateUserDto): Promise<void> {
+    const { name, password, email } = dto;
+    await this.usersService.createUser(name, password, email);
   }
 
   @Post('/email-verify')
-  async verifyEmail(@Query() dto: VerifyEmailDto): Promise<VerifyEmailDto> {
-    console.log(dto);
-    return dto;
+  async verifyEmail(@Query() dto: VerifyEmailDto): Promise<string> {
+    const { signupVerifyToken } = dto;
+
+    return await this.usersService.verifyEmail(signupVerifyToken);
   }
 
   @Post('/login')
-  async login(@Body() dto: UserLoginDto): Promise<UserLoginDto> {
-    console.log(dto);
-    return dto;
+  async login(@Body() dto: UserLoginDto): Promise<string> {
+    const { email, password } = dto;
+
+    return await this.usersService.login(email, password);
   }
 
   @Get('/:id')
   async getUserInfo(@Param('id') userId: string): Promise<UserInfo> {
-    console.log(userId);
-    return new UserInfo(userId);
+    return await this.usersService.getUserInfo(userId);
   }
 
   // ===================== 3-1 코드

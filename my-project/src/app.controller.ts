@@ -16,6 +16,11 @@ class BaseService {
 
 @Injectable()
 export class ServiceB extends BaseService {
+  // BaseService에서 serviceA를 주입받으므로 super를 호출하지 않아도 된다.
+  // constructor(serviceA: ServiceA) {
+  //   super(serviceA);
+  // }
+
   getHello(): string {
     return this.doSomeFuncFromA();
   }
