@@ -1,3 +1,3 @@
 dist/
 
-.env
+src/config/env/.development.env
