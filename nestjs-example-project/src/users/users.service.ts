@@ -49,6 +49,10 @@ export class UsersService {
     throw new Error('Method not Implemented');
   }
 
+  async findAll() {
+    throw new Error('Method not Implemented');
+  }
+
   private async checkUserExists(email: string) {
     return; // TODO: DB 연동 후 구현
   }

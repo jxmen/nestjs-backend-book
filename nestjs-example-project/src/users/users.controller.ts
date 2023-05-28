@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  DefaultValuePipe,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import VerifyEmailDto from './dto/verify-email.dto';
@@ -34,6 +43,17 @@ export class UsersController {
     return await this.usersService.getUserInfo(userId);
   }
 
+  @Get()
+  findAll(
+    @Query('offset', new DefaultValuePipe(0), ParseIntPipe) offset: number,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
+  ) {
+    console.log(`offset: ${offset}`);
+    console.log(`limit: ${limit}`);
+
+    return this.usersService.findAll();
+  }
+
   // ===================== 3-1 코드
 
   // @Post()
@@ -41,10 +61,6 @@ export class UsersController {
   //   return this.usersService.create(createUserDto);
   // }
 
-  // @Get()
-  // findAll() {
-  //   return this.usersService.findAll();
-  // }
   //
   // @Redirect('https://nestjs.com', 301)
   // @Header('Custom', 'Test Header')
