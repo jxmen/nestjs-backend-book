@@ -1,16 +1,11 @@
 import { Module } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
-import EmailService from './email.service';
-import { ConfigModule } from '@nestjs/config';
+import { EmailModule } from '../email/email.module';
 
 @Module({
-  imports: [
-    ConfigModule.forRoot({
-      envFilePath: '.env',
-    }),
-  ],
+  imports: [EmailModule],
   controllers: [UsersController],
-  providers: [UsersService, EmailService],
+  providers: [UsersService],
 })
 export class UsersModule {}
