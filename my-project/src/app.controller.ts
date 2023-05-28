@@ -1,4 +1,5 @@
 import { Controller, Get, Inject, Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class ServiceA {
@@ -28,11 +29,14 @@ export class ServiceB extends BaseService {
 
 @Controller()
 export class AppController {
-  constructor(private readonly serviceB: ServiceB) {}
+  constructor(
+    private readonly serviceB: ServiceB,
+    private readonly configService: ConfigService,
+  ) {}
 
-  @Get()
-  getHello(): string {
-    return process.env.DATABASE_HOST;
+  @Get('/db-host-from-config')
+  getDatabaseHostFromConfigService(): string {
+    return this.configService.get('DATABASE_HOST');
   }
 
   @Get('/serviceB')
