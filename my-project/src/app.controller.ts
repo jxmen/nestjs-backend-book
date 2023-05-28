@@ -30,6 +30,11 @@ export class ServiceB extends BaseService {
 export class AppController {
   constructor(private readonly serviceB: ServiceB) {}
 
+  @Get()
+  getHello(): string {
+    return process.env.DATABASE_HOST;
+  }
+
   @Get('/serviceB')
   getHelloC(): string {
     return this.serviceB.getHello();
