@@ -13,15 +13,15 @@ import { CreateUserDto } from './dto/create-user.dto';
 import VerifyEmailDto from './dto/verify-email.dto';
 import UserLoginDto from './dto/user-login.dto';
 import UserInfo from './dto/user-info.dto';
+import { ValidationPipe } from './pipes/validation.pipe';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  async createUser(@Body() dto: CreateUserDto): Promise<void> {
-    const { name, password, email } = dto;
-    await this.usersService.createUser(name, password, email);
+  async createUser(@Body() dto: CreateUserDto): Promise<string> {
+    return this.usersService.create(dto);
   }
 
   @Post('/email-verify')
@@ -39,7 +39,9 @@ export class UsersController {
   }
 
   @Get('/:id')
-  async getUserInfo(@Param('id') userId: string): Promise<UserInfo> {
+  async getUserInfo(
+    @Param('id', ValidationPipe, ParseIntPipe) userId: number,
+  ): Promise<UserInfo> {
     return await this.usersService.getUserInfo(userId);
   }
 
