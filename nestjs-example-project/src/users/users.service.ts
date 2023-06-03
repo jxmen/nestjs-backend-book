@@ -11,9 +11,9 @@ export class UsersService {
   ) {}
 
   create(createUserDto: CreateUserDto) {
-    const { name, email } = createUserDto;
+    const { name, email, password } = createUserDto;
 
-    return `유저 생성 - 이름: ${name}, 이메일: ${email}`;
+    return `유저 생성 - 이름: ${name}, 이메일: ${email}, 패스워드: ${password}`;
   }
 
   async createUser(name: string, password: string, email: string) {
