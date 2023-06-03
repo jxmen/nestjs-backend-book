@@ -24,7 +24,7 @@ export class UsersService {
 
     const signupVerifyToken = uuid.v1();
 
-    await this.saveUserUsingQueryRunner(
+    await this.saveUserUsingTransaction(
       name,
       email,
       password,
@@ -123,6 +123,26 @@ export class UsersService {
       // 직접 생성한 QueryRunner는 해제시켜야 함
       await queryRunner.release();
     }
+  }
+
+  private async saveUserUsingTransaction(
+    name: string,
+    email: string,
+    password: string,
+    signupVerifyToken: string,
+  ) {
+    await this.dataSource.transaction(async (manager) => {
+      const user = new UserEntity();
+      user.id = uuid.v1();
+      user.name = name;
+      user.email = email;
+      user.password = password;
+      user.signupVerifyToken = signupVerifyToken;
+
+      await manager.save(user);
+
+      // throw new InternalServerErrorException('일부러 에러 발생');
+    });
   }
 
   private async sendMemberJoinEmail(
