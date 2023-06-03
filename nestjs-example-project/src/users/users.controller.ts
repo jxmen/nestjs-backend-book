@@ -20,8 +20,8 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  async createUser(@Body() dto: CreateUserDto): Promise<string> {
-    return this.usersService.create(dto);
+  async createUser(@Body() dto: CreateUserDto): Promise<void> {
+    await this.usersService.createUser(dto.name, dto.password, dto.email);
   }
 
   @Post('/email-verify')

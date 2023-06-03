@@ -1,10 +1,4 @@
-import {
-  IsEmail,
-  IsString,
-  Matches,
-  MaxLength,
-  MinLength,
-} from 'class-validator';
+import { IsEmail, IsString, MaxLength, MinLength } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { NotIn } from '../decorators/not-in';
 
@@ -22,6 +16,6 @@ export class CreateUserDto {
   readonly email: string;
 
   @IsString()
-  @Matches(/^[A-Za-z\d!@#$%^&*()]{8,30}]$/)
+  // @Matches(/^[A-Za-z\d!@#$%^&*()]{8,30}]$/)
   readonly password: string;
 }

@@ -7,6 +7,7 @@ import { ConfigModule } from '@nestjs/config';
 import emailConfig from './config/emailConfig';
 
 import * as Joi from 'joi';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 const validationSchema = Joi.object({
   EMAIL_SERVICE: Joi.string().required(),
@@ -27,6 +28,16 @@ const validationSchema = Joi.object({
       load: [emailConfig],
       isGlobal: true,
       validationSchema,
+    }),
+    TypeOrmModule.forRoot({
+      type: 'mysql',
+      host: process.env.DATABASE_HOST,
+      port: 3306,
+      username: process.env.DATABASE_USERNAME,
+      password: process.env.DATABASE_PASSWORD,
+      database: 'test',
+      entities: [__dirname + '/**/*.entity{.ts,.js}'],
+      synchronize: process.env.DATABASE_SYNCHORONIZE === 'true', // 소스 기반으로 데이터베이스 스키마 동기화. 운영에서는 비사용 권장!!!
     }),
   ],
   controllers: [ApiController, AppController],
