@@ -1,4 +1,9 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  RequestMethod,
+} from '@nestjs/common';
 import { UsersModule } from './users/users.module';
 import { ApiController } from './api/api.controller';
 import { AppController, ServiceA, ServiceB } from './app.controller';
@@ -9,6 +14,8 @@ import emailConfig from './config/emailConfig';
 import * as Joi from 'joi';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { LoggerMiddleware } from './logger.middleware';
+import { Logger2Middleware } from './logger2.middleware';
+import { UsersController } from './users/users.controller';
 
 const validationSchema = Joi.object({
   EMAIL_SERVICE: Joi.string().required(),
@@ -47,6 +54,12 @@ const validationSchema = Joi.object({
 // 미들웨어를 모듈에 포함하기 위해서는 NestModule 인터에피스를 구현해야 한다.
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer): any {
-    consumer.apply(LoggerMiddleware).forRoutes('/users');
+    consumer
+      .apply(LoggerMiddleware, Logger2Middleware)
+      .exclude({
+        path: '/users',
+        method: RequestMethod.GET,
+      })
+      .forRoutes(UsersController);
   }
 }
