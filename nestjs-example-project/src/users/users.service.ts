@@ -9,11 +9,14 @@ import UserInfo from './dto/user-info.dto';
 import { UserEntity } from './entities/user.entity';
 import { DataSource, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { NotFoundError } from 'rxjs';
+import { AuthService } from '../auth/auth.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     @Inject(EmailService) private readonly emailService: EmailService,
+    @Inject(AuthService) private readonly authService: AuthService,
     @InjectRepository(UserEntity)
     private readonly usersRepository: Repository<UserEntity>,
     private dataSource: DataSource,
@@ -34,11 +37,19 @@ export class UsersService {
   }
 
   async verifyEmail(signupVerifyToken: string): Promise<string> {
-    // TODO:
-    // 1. DB에서 signupVerifyToken으로 회원 가입 처리중인 유저가 있는지 확인하고 없다면 에러 처리
-    // 2. 바로 로그인 상태가 되도록 JWT 발급
+    const user = await this.usersRepository.findOne({
+      where: { signupVerifyToken },
+    });
 
-    throw new Error('Method not Implemented');
+    if (!user) {
+      throw new NotFoundError('유저가 존재하지 않습니다.');
+    }
+
+    return this.authService.login({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+    });
   }
 
   async login(email: string, password: string): Promise<string> {
