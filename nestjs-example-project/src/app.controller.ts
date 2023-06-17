@@ -1,5 +1,6 @@
-import { Controller, Get, Inject, Injectable } from '@nestjs/common';
+import { Controller, Get, Inject, Injectable, UseGuards } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { AuthGuard } from './auth.guard';
 
 @Injectable()
 export class ServiceA {
@@ -27,6 +28,7 @@ export class ServiceB extends BaseService {
   }
 }
 
+@UseGuards(AuthGuard)
 @Controller()
 export class AppController {
   constructor(
