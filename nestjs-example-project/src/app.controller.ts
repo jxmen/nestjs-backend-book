@@ -1,6 +1,6 @@
 import { Controller, Get, Inject, Injectable, UseGuards } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { AuthGuard } from './auth.guard';
+import { AuthGuard } from './auth/auth.guard';
 
 @Injectable()
 export class ServiceA {

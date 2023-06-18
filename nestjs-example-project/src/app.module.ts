@@ -16,6 +16,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { LoggerMiddleware } from './logger.middleware';
 import { Logger2Middleware } from './logger2.middleware';
 import { UsersController } from './users/users.controller';
+import { AuthModule } from './auth/auth.module';
 
 const validationSchema = Joi.object({
   EMAIL_SERVICE: Joi.string().required(),
@@ -26,6 +27,7 @@ const validationSchema = Joi.object({
 
 @Module({
   imports: [
+    AuthModule,
     UsersModule,
     EmailModule,
     /**
