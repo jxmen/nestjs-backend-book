@@ -3,7 +3,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import authConfig from '../config/authConfig';
 import { ConfigType } from '@nestjs/config';
 
-export interface User {
+export interface UserLoginRequest {
   id: string;
   name: string;
   email: string;
@@ -15,8 +15,8 @@ export class AuthService {
     @Inject(authConfig.KEY) private config: ConfigType<typeof authConfig>,
   ) {}
 
-  login(user: User) {
-    const payload = { ...user };
+  login(userLoginRequest: UserLoginRequest) {
+    const payload = { ...userLoginRequest };
 
     return jwt.sign(payload, this.config.jwtSecret, {
       expiresIn: '1d',

@@ -2,6 +2,7 @@ import * as uuid from 'uuid';
 import {
   Inject,
   Injectable,
+  NotFoundException,
   UnprocessableEntityException,
 } from '@nestjs/common';
 import EmailService from '../email/email.service';
@@ -45,6 +46,9 @@ export class UsersService {
       throw new NotFoundError('유저가 존재하지 않습니다.');
     }
 
+    user.emailVerify();
+    await this.usersRepository.save(user);
+
     return this.authService.login({
       id: user.id,
       name: user.name,
@@ -53,11 +57,21 @@ export class UsersService {
   }
 
   async login(email: string, password: string): Promise<string> {
-    // TODO:
-    // 1. email, password를 DB에서 조회하고 없다면 에러 처리
-    // 2. JWT 발급
+    const user = await this.usersRepository.findOne({
+      where: { email, password },
+    });
 
-    throw new Error('Method not Implemented');
+    if (!user) {
+      throw new NotFoundException('유저가 존재하지 않습니다.');
+    }
+
+    user.checkEmailVerified();
+
+    return this.authService.login({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+    });
   }
 
   async getUserInfo(userId: number): Promise<UserInfo> {
@@ -80,9 +94,7 @@ export class UsersService {
     });
 
     if (user) {
-      throw new UnprocessableEntityException(
-        '해당 이메일로는 가입할 수 없습니다.',
-      );
+      throw new UnprocessableEntityException('이미 가입한 이메일입니다.');
     }
   }
 
