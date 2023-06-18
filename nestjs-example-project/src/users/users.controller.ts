@@ -3,6 +3,7 @@ import {
   Controller,
   DefaultValuePipe,
   Get,
+  Headers,
   Param,
   ParseIntPipe,
   Post,
@@ -14,10 +15,14 @@ import VerifyEmailDto from './dto/verify-email.dto';
 import UserLoginDto from './dto/user-login.dto';
 import UserInfo from './dto/user-info.dto';
 import { ValidationPipe } from './pipes/validation.pipe';
+import { AuthService } from '../auth/auth.service';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly authService: AuthService,
+  ) {}
 
   @Post()
   async createUser(@Body() dto: CreateUserDto): Promise<void> {
@@ -40,8 +45,13 @@ export class UsersController {
 
   @Get('/:id')
   async getUserInfo(
-    @Param('id', ValidationPipe, ParseIntPipe) userId: number,
+    @Headers() headers: any,
+    @Param('id', ValidationPipe) userId: string,
   ): Promise<UserInfo> {
+    const jwtString: string = headers.authorization.split('Bearer ')[1];
+
+    this.authService.verify(jwtString);
+
     return await this.usersService.getUserInfo(userId);
   }
 

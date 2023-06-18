@@ -1,7 +1,11 @@
 export default class UserInfo {
-  private userId: string;
+  id: string;
+  name: string;
+  email: string;
 
-  constructor(userId: string) {
-    this.userId = userId;
+  constructor(id: string, name: string, email: string) {
+    this.id = id;
+    this.name = name;
+    this.email = email;
   }
 }
