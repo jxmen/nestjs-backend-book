@@ -98,56 +98,6 @@ export class UsersService {
     }
   }
 
-  private async saveUser(
-    name: string,
-    email: string,
-    password: string,
-    signupVerifyToken: string,
-  ) {
-    const user = new UserEntity();
-    user.id = uuid.v1();
-    user.name = name;
-    user.email = email;
-    user.password = password;
-    user.signupVerifyToken = signupVerifyToken;
-
-    await this.usersRepository.save(user);
-  }
-
-  private async saveUserUsingQueryRunner(
-    name: string,
-    email: string,
-    password: string,
-    signupVerifyToken: string,
-  ) {
-    const queryRunner = this.dataSource.createQueryRunner();
-
-    await queryRunner.connect();
-    await queryRunner.startTransaction();
-
-    try {
-      const user = new UserEntity();
-      user.id = uuid.v1();
-      user.name = name;
-      user.email = email;
-      user.password = password;
-      user.signupVerifyToken = signupVerifyToken;
-
-      await queryRunner.manager.save(user);
-
-      // throw new InternalServerErrorException('일부러 에러 발생');
-
-      await queryRunner.commitTransaction();
-    } catch (e) {
-      await queryRunner.rollbackTransaction();
-
-      throw e;
-    } finally {
-      // 직접 생성한 QueryRunner는 해제시켜야 함
-      await queryRunner.release();
-    }
-  }
-
   private async saveUserUsingTransaction(
     name: string,
     email: string,
