@@ -27,6 +27,7 @@ const validationSchema = Joi.object({
 
 @Module({
   imports: [
+    // Note: AuthGuard를 불러오기 위해 먼저 import한다.
     AuthModule,
     UsersModule,
     EmailModule,
