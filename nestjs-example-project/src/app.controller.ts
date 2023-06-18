@@ -45,4 +45,9 @@ export class AppController {
   getHelloC(): string {
     return this.serviceB.getHello();
   }
+
+  @Get('/error')
+  error(): void {
+    throw new Error('일부러 예외 발생');
+  }
 }
